@@ -179,6 +179,31 @@ export interface ValidationSchemaPluginConfig extends TypeScriptPluginConfig {
    */
   enumsAsTypes?: boolean
   /**
+   * @description Generates validation schema for enum with fallback value
+   * @default false
+   *
+   * @exampleMarkdown
+   * ```yml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - graphql-codegen-validation-schema
+   *     config:
+   *       futureProofEnums: true
+   * ```
+   *
+   * ```yml
+   * generates:
+   *   path/to/file.ts:
+   *     plugins:
+   *       - typescript
+   *       - graphql-codegen-validation-schema
+   *     config:
+   *       futureProofEnums: true
+   * ```
+   */
+  futureProofEnums?: boolean
+  /**
    * @description Generates validation string schema as do not allow empty characters by default.
    * @default false
    *

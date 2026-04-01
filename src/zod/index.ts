@@ -188,6 +188,14 @@ export class ZodSchemaVisitor extends BaseSchemaVisitor {
         const enumTypeName = visitor.prefixTypeNamespace(enumname);
         this.importTypes.push(enumname);
 
+        const values = node.values?.map(enumOption => `'${enumOption.name.value}'`);
+        if (this.config.futureProofEnums && values) {
+          values.push(`'%future added value'`);
+        }
+        const suffix = this.config.futureProofEnums
+          ? `.catch(() => '%future added value' as const) as z.ZodType<${enumTypeName}, any, ${enumTypeName}>`
+          : '';
+
         // hoist enum declarations
         this.enumDeclarations.push(
           this.config.enumsAsTypes
@@ -195,7 +203,7 @@ export class ZodSchemaVisitor extends BaseSchemaVisitor {
               .export()
               .asKind('const')
               .withName(`${enumname}Schema`)
-              .withContent(`z.enum([${node.values?.map(enumOption => `'${enumOption.name.value}'`).join(', ')}])`)
+              .withContent(`z.enum([${values?.join(', ')}])${suffix}`)
               .string
             : new DeclarationBlock({})
               .export()
